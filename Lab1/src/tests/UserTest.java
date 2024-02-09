@@ -5,10 +5,6 @@ import utils.TestUtils;
 
 public class UserTest {
 
-	public static void main(String[] args) {
-		testUserConstructor();
-	}
-
 	public static void testUserConstructor() {
 		/*
 		 * OLD; Manual-testing shown below
@@ -79,5 +75,9 @@ public class UserTest {
 //		assert 1==2;
 
 		System.out.println("All Java assertions in the test suite passed (none failed).");
+	}
+
+	public static void main(String[] args) {
+		testUserConstructor();
 	}
 }
