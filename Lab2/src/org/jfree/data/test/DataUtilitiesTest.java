@@ -70,4 +70,129 @@ public class DataUtilitiesTest {
 		dataArray = null;
 		dataValues = null;
 	}
+
+	// CalculateColumnTotal
+
+	@Test
+	public void testCalculateColumnTotal_WithValidDataAndLastColumnValue() {
+		int column = data.getColumnCount() - 1;
+
+		assertEquals("Valid 2D matrix and last column value: Expected sum of last column.", 16.0,
+				DataUtilities.calculateColumnTotal(data, column), 0.0000001d);
+	}
+
+	@Test
+	public void testCalculateColumnTotal_WithValidDataAndZeroColumnValue() {
+		int column = 0;
+
+		assertEquals("Valid 2D matrix and column value zero: Expected 0.0.", 0.0,
+				DataUtilities.calculateColumnTotal(data, column), 0.0000001d);
+	}
+
+	@Test
+	public void testCalculateColumnTotal_WithValidDataAndColumnValue() {
+		int column = 1;
+
+		assertEquals("Valid 2D matrix and column value: Expected 4.0.", 4.0,
+				DataUtilities.calculateColumnTotal(data, column), 0.0000001d);
+	}
+
+	@Test
+	public void testCalculateColumnTotal_WithValidDataAndInvalidColumnValueLessThan0() {
+		try {
+			int column = -1;
+
+			assertEquals("Invalid column value supplied: Expected 0.0.", 0.0,
+					DataUtilities.calculateColumnTotal(data, column), 0.0000001d);
+		} catch (IndexOutOfBoundsException e) {
+			fail("Expected 0.0 returned for invalid column value on valid 2D matrix.");
+		}
+	}
+
+	@Test
+	public void testCalculateColumnTotal_WithValidDataAndInvalidColumnValueGreaterThanNumberOfColumns() {
+		try {
+			int column = 13;
+
+			assertEquals("Invalid column value supplied: Expected 0.0.", 0.0,
+					DataUtilities.calculateColumnTotal(data, column), 0.0000001d);
+		} catch (IndexOutOfBoundsException e) {
+			fail("Expected 0.0 returned for invalid column value on valid 2D matrix.");
+		}
+	}
+
+	@Test
+	public void testCalculateColumnTotal_WithEmptyDataAndValidColumnValue() {
+		int column = 1;
+
+		DefaultKeyedValues2D testEmpty = new DefaultKeyedValues2D();
+
+		data = testEmpty;
+
+		assertEquals("Empty 2D matrix: Expected 0.0.", 0.0, DataUtilities.calculateColumnTotal(data, column),
+				0.0000001d);
+	}
+
+	@Test
+	public void testCalculateColumnTotal_WithEmptyDataAndInvalidColumnValueLessThan0() {
+		int column = -1;
+
+		DefaultKeyedValues2D testEmpty = new DefaultKeyedValues2D();
+
+		data = testEmpty;
+
+		assertEquals("Invalid column value supplied: Expected 0.0.", 0.0,
+				DataUtilities.calculateColumnTotal(data, column), 0.0000001d);
+	}
+
+	@Test
+	public void testCalculateColumnTotal_WithEmptyDataAndInvalidColumnValueGreaterThanNumberOfColumns() {
+		int column = 13;
+
+		DefaultKeyedValues2D testEmpty = new DefaultKeyedValues2D();
+
+		data = testEmpty;
+
+		assertEquals("Invalid column value supplied: Expected 0.0.", 0.0,
+				DataUtilities.calculateColumnTotal(data, column), 0.0000001d);
+	}
+
+	@Test
+	public void testCalculateColumnTotal_WithNullDataAndValidColumnValue() {
+		int column = 1;
+
+		try {
+			DataUtilities.calculateColumnTotal(null, column);
+			fail("Expected IllegalArgumentException for null 2D matrix and valid column value.");
+		} catch (Exception e) {
+			assertTrue("IllegalArgumentException should be thrown for null data and valid column value.",
+					e.getClass().equals(IllegalArgumentException.class));
+		}
+	}
+
+	@Test
+	public void testCalculateColumnTotal_WithNullDataAndInvalidColumnValueLessThan0() {
+		int column = -1;
+
+		try {
+			DataUtilities.calculateColumnTotal(null, column);
+			fail("Expected IllegalArgumentException for null 2D matrix and invalid column value.");
+		} catch (Exception e) {
+			assertTrue("IllegalArgumentException should be thrown for null data and invalid column value.",
+					e.getClass().equals(IllegalArgumentException.class));
+		}
+	}
+
+	@Test
+	public void testCalculateColumnTotal_WithNullDataAndInvalidColumnValueGreaterThanNumberOfColumns() {
+		int column = 13;
+
+		try {
+			DataUtilities.calculateColumnTotal(null, column);
+			fail("Expected IllegalArgumentException for null 2D matrix and invalid column value.");
+		} catch (Exception e) {
+			assertTrue("IllegalArgumentException should be thrown for null data and invalid column value.",
+					e.getClass().equals(IllegalArgumentException.class));
+		}
+	}
 }
