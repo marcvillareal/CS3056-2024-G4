@@ -391,4 +391,76 @@ public class DataUtilitiesTest {
 		assertArrayEquals("Valid double array supplied: Expected array of Number objects.", expectedOutput,
 				DataUtilities.createNumberArray(dataArray));
 	}
+
+	// CreateNumberArray2D
+
+	@Test
+	public void testCreateNumberArray2D_WithValidDataArray2D() {
+
+		Number[][] expectedOutput = { { 1.5, 2.5, 3.5 }, { 4.5, 5.5, 6.5 } };
+
+		assertArrayEquals("Valid 2D double array supplied: Expected 2D array of Number objects.", expectedOutput,
+				DataUtilities.createNumberArray2D(dataArray2D));
+	}
+
+	@Test
+	public void testCreateNumberArray2D_WithEmptyDataArray2D() {
+		Number[][] expectedOutput = {};
+
+		dataArray2D = new double[0][0];
+
+		assertArrayEquals("Empty 2D double array supplied: Expected empty 2D array of Number objects.", expectedOutput,
+				DataUtilities.createNumberArray2D(dataArray2D));
+	}
+
+	@Test
+	public void testCreateNumberArray2D_WithNullDataArray2D() {
+		try {
+			DataUtilities.createNumberArray2D(null);
+			fail("Expected IllegalArgumentException for null 2D double array.");
+		} catch (Exception e) {
+			assertTrue("IllegalArgumentException should be thrown for null 2D double array.",
+					e.getClass().equals(IllegalArgumentException.class));
+		}
+	}
+
+	@Test
+	public void testCreateNumberArray2D_WithValidDataArray2DOfNegativeValues() {
+		Number[][] expectedOutput = { { -1.5, -2.5, -3.5 }, { -4.5, -5.5, -6.5 } };
+
+		double[][] dataArray2D = { { -1.5, -2.5, -3.5 }, { -4.5, -5.5, -6.5 } };
+
+		assertArrayEquals("Valid 2D double array supplied: Expected 2D array of Number objects.", expectedOutput,
+				DataUtilities.createNumberArray2D(dataArray2D));
+	}
+
+	@Test
+	public void testCreateNumberArray2D_WithValidDataArray2DOfZeroValues() {
+		Number[][] expectedOutput = { { 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0 } };
+
+		double[][] dataArray2D = { { 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0 } };
+
+		assertArrayEquals("Valid 2D double array supplied: Expected 2D array of Number objects.", expectedOutput,
+				DataUtilities.createNumberArray2D(dataArray2D));
+	}
+
+	@Test
+	public void testCreateNumberArray2D_WithValidDataArray2DOfLargeValues() {
+		Number[][] expectedOutput = { { 1000.0, 2000.0, 3000.0 }, { 4000.0, 5000.0, 6000.0 } };
+
+		double[][] dataArray2D = { { 1000.0, 2000.0, 3000.0 }, { 4000.0, 5000.0, 6000.0 } };
+
+		assertArrayEquals("Valid 2D double array supplied: Expected 2D array of Number objects.", expectedOutput,
+				DataUtilities.createNumberArray2D(dataArray2D));
+	}
+
+	@Test
+	public void testCreateNumberArray2D_WithValidDataArray2DOfMixedValues() {
+		Number[][] expectedOutput = { { 1.5, -2.5, 3.5 }, { 0.0, 4000.0, 0.0 } };
+
+		double[][] dataArray2D = { { 1.5, -2.5, 3.5 }, { 0.0, 4000.0, 0.0 } };
+
+		assertArrayEquals("Valid 2D double array supplied: Expected 2D array of Number objects.", expectedOutput,
+				DataUtilities.createNumberArray2D(dataArray2D));
+	}
 }
