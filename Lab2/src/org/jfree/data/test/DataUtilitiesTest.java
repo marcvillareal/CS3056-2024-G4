@@ -463,4 +463,52 @@ public class DataUtilitiesTest {
 		assertArrayEquals("Valid 2D double array supplied: Expected 2D array of Number objects.", expectedOutput,
 				DataUtilities.createNumberArray2D(dataArray2D));
 	}
+
+	// GetCumulativePercentages
+
+	@Test
+	public void testGetCumulativePercentages_WithValidDataAndNonNumericKeys() {
+		DefaultKeyedValues testKeyValues = new DefaultKeyedValues();
+
+		testKeyValues.addValue("A", 5);
+		testKeyValues.addValue("B", 9);
+		testKeyValues.addValue("C", 2);
+
+		KeyedValues dataValues = DataUtilities.getCumulativePercentages((KeyedValues) testKeyValues);
+
+		assertEquals("Valid data with non-numeric keys: Expected cumulative percentage of 1.0.", 1.0,
+				(double) dataValues.getValue(2), 0.000000001d);
+	}
+
+	@Test
+	public void testGetCumulativePercentages_WithValidData() {
+		assertEquals("Valid data supplied: Expected cumulative percentage of 1.0.", 1.0,
+				(double) dataValues.getValue(2), 0.000000001d);
+	}
+
+	@Test
+	public void testGetCumulativePercentages_WithEmptyData() {
+		DefaultKeyedValues testKeyValues = new DefaultKeyedValues();
+
+		dataValues = DataUtilities.getCumulativePercentages((KeyedValues) testKeyValues);
+
+		try {
+			DataUtilities.getCumulativePercentages(dataValues);
+			fail("Expected IllegalArgumentException for empty data.");
+		} catch (Exception e) {
+			assertTrue("IllegalArgumentException should be thrown for empty data.",
+					e.getClass().equals(IllegalArgumentException.class));
+		}
+	}
+
+	@Test
+	public void testGetCumulativePercentages_WithNullData() {
+		try {
+			DataUtilities.getCumulativePercentages(null);
+			fail("Expected IllegalArgumentException for null data.");
+		} catch (Exception e) {
+			assertTrue("IllegalArgumentException should be thrown for null data.",
+					e.getClass().equals(IllegalArgumentException.class));
+		}
+	}
 }
