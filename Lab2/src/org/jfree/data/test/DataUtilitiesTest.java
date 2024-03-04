@@ -320,4 +320,75 @@ public class DataUtilitiesTest {
 					e.getClass().equals(IllegalArgumentException.class));
 		}
 	}
+
+	// CreateNumberArray
+
+	@Test
+	public void testCreateNumberArray_WithValidDataArray() {
+		Number[] expectedOutput = { 1.5, 2.5, 3.5 };
+
+		assertArrayEquals("Valid double array supplied: Expected array of Number objects.", expectedOutput,
+				DataUtilities.createNumberArray(dataArray));
+	}
+
+	@Test
+	public void testCreateNumberArray_WithEmptyDataArray() {
+		Number[] expectedOutput = {};
+
+		dataArray = new double[0];
+
+		assertArrayEquals("Empty double array supplied: Expected empty array of Number objects.", expectedOutput,
+				DataUtilities.createNumberArray(dataArray));
+	}
+
+	@Test
+	public void testCreateNumberArray_WithNullDataArray() {
+		try {
+			DataUtilities.createNumberArray(null);
+			fail("Expected IllegalArgumentException for null data array.");
+		} catch (Exception e) {
+			assertTrue("IllegalArgumentException should be thrown for null data array.",
+					e.getClass().equals(IllegalArgumentException.class));
+		}
+	}
+
+	@Test
+	public void testCreateNumberArray_WithValidDataArrayOfNegativeValues() {
+		Number[] expectedOutput = { -1.5, -2.5, -3.5 };
+
+		double[] dataArray = { -1.5, -2.5, -3.5 };
+
+		assertArrayEquals("Valid double array supplied: Expected array of Number objects.", expectedOutput,
+				DataUtilities.createNumberArray(dataArray));
+	}
+
+	@Test
+	public void testCreateNumberArray_WithValidDataArrayOfZeroValues() {
+		Number[] expectedOutput = { 0.0, 0.0, 0.0 };
+
+		double[] dataArray = { 0.0, 0.0, 0.0 };
+
+		assertArrayEquals("Valid double array supplied: Expected array of Number objects.", expectedOutput,
+				DataUtilities.createNumberArray(dataArray));
+	}
+
+	@Test
+	public void testCreateNumberArray_WithValidDataArrayOfLargeValues() {
+		Number[] expectedOutput = { 1000.0, 2000.0, 3000.0 };
+
+		double[] dataArray = { 1000.0, 2000.0, 3000.0 };
+
+		assertArrayEquals("Valid double array supplied: Expected array of Number objects.", expectedOutput,
+				DataUtilities.createNumberArray(dataArray));
+	}
+
+	@Test
+	public void testCreateNumberArray_WithValidDataArrayOfMixedValues() {
+		Number[] expectedOutput = { 1.5, -2.5, 0.0, 3000.0 };
+
+		double[] dataArray = { 1.5, -2.5, 0.0, 3000.0 };
+
+		assertArrayEquals("Valid double array supplied: Expected array of Number objects.", expectedOutput,
+				DataUtilities.createNumberArray(dataArray));
+	}
 }
