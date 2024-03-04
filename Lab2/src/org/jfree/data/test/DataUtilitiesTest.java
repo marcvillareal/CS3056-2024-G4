@@ -195,4 +195,129 @@ public class DataUtilitiesTest {
 					e.getClass().equals(IllegalArgumentException.class));
 		}
 	}
+
+	// CalculateRowTotal
+
+	@Test
+	public void testCalculateRowTotal_WithValidDataAndZeroRowValue() {
+		int row = 0;
+
+		assertEquals("Valid 2D matrix and row value zero: Expected 12.0.", 12.0,
+				DataUtilities.calculateRowTotal(data, row), 0.0000001d);
+	}
+
+	@Test
+	public void testCalculateRowTotal_WithValidDataAndRowValue() {
+		int row = 0;
+
+		assertEquals("Valid 2D matrix and row value: Expected 12.0.", 12.0, DataUtilities.calculateRowTotal(data, row),
+				0.0000001d);
+	}
+
+	@Test
+	public void testCalculateRowTotal_WithValidDataAndLastRowValue() {
+		int row = data.getRowCount() - 1;
+
+		assertEquals("Valid 2D matrix and last row value: Expected sum of last row.", 18.0,
+				DataUtilities.calculateRowTotal(data, row), 0.0000001d);
+	}
+
+	@Test
+	public void testCalculateRowTotal_WithValidDataAndInvalidRowValueLessThan0() {
+		try {
+
+			int row = -1;
+
+			assertEquals("Invalid row value supplied: Expected 0.0.", 0.0, DataUtilities.calculateRowTotal(data, row),
+					0.0000001d);
+		} catch (IndexOutOfBoundsException e) {
+			fail("Expected 0.0 returned for invalid row value on valid 2D matrix.");
+		}
+	}
+
+	@Test
+	public void testCalculateRowTotal_WithValidDataAndInvalidRowValueGreaterThanNumberOfRows() {
+		try {
+			int row = 13;
+
+			assertEquals("Invalid row value supplied: Expected 0.0.", 0.0, DataUtilities.calculateRowTotal(data, row),
+					0.0000001d);
+		} catch (IndexOutOfBoundsException e) {
+			fail("Expected 0.0 returned for invalid row value on valid 2D matrix.");
+		}
+	}
+
+	@Test
+	public void testCalculateRowTotal_WithEmptyDataAndValidRowValue() {
+		int row = 0;
+
+		DefaultKeyedValues2D testEmpty = new DefaultKeyedValues2D();
+
+		data = testEmpty;
+
+		assertEquals("Empty 2D matrix: Expected 0.0.", 0.0, DataUtilities.calculateRowTotal(data, row), 0.0000001d);
+	}
+
+	@Test
+	public void testCalculateRowTotal_WithEmptyDataAndInvalidRowValueLessThan0() {
+		int row = -1;
+
+		DefaultKeyedValues2D testEmpty = new DefaultKeyedValues2D();
+
+		data = testEmpty;
+
+		assertEquals("Invalid row value supplied: Expected 0.0.", 0.0, DataUtilities.calculateRowTotal(data, row),
+				0.0000001d);
+	}
+
+	@Test
+	public void testCalculateRowTotal_WithEmptyDataAndInvalidRowValueGreaterThanNumberOfRows() {
+		int row = 13;
+
+		DefaultKeyedValues2D testEmpty = new DefaultKeyedValues2D();
+
+		data = testEmpty;
+
+		assertEquals("Invalid row value supplied: Expected 0.0.", 0.0, DataUtilities.calculateRowTotal(data, row),
+				0.0000001d);
+	}
+
+	@Test
+	public void testCalculateRowTotal_WithNullDataAndValidRowValue() {
+		int row = 0;
+
+		try {
+			DataUtilities.calculateRowTotal(null, row);
+			fail("Expected IllegalArgumentException for null 2D matrix and valid row value.");
+		} catch (Exception e) {
+			assertTrue("IllegalArgumentException should be thrown for null data and valid row value.",
+					e.getClass().equals(IllegalArgumentException.class));
+		}
+	}
+
+	@Test
+	public void testCalculateRowTotal_WithNullDataAndInvalidRowValueLessThan0() {
+		int row = -1;
+
+		try {
+			DataUtilities.calculateRowTotal(null, row);
+			fail("Expected IllegalArgumentException for null 2D matrix and invalid row value.");
+		} catch (Exception e) {
+			assertTrue("IllegalArgumentException should be thrown for null data and invalid row value.",
+					e.getClass().equals(IllegalArgumentException.class));
+		}
+	}
+
+	@Test
+	public void testCalculateRowTotal_WithNullDataAndInvalidRowValueGreaterThanNumberOfRows() {
+		int row = 13;
+
+		try {
+			DataUtilities.calculateRowTotal(null, row);
+			fail("Expected IllegalArgumentException for null 2D matrix and invalid row value.");
+		} catch (Exception e) {
+			assertTrue("IllegalArgumentException should be thrown for null data and invalid row value.",
+					e.getClass().equals(IllegalArgumentException.class));
+		}
+	}
 }
