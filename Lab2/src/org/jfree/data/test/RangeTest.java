@@ -220,33 +220,53 @@ public class RangeTest {
 	// ---------------------Test methods for intersects(double lower,double upper)
 
 	@Test
-	public void testIntersectsLowerLeftOfRangeUpperLeftBoundaryReturnsTrue() {
+	public void testIntersectsOnlyLowerIntersects() {
+		rangeObjectUnderTest = new Range(-10, 5);
 		assertTrue("Should return true", rangeObjectUnderTest.intersects(1, 6));
 	}
 
 	@Test
-	public void testIntersectsLowerLeftOfRangeUpperLeftInRangeReturnsTrue() {
-		assertTrue("Should return true", rangeObjectUnderTest.intersects(1, 9));
+	public void testIntersectsOnlyUpperIntersects() {
+		rangeObjectUnderTest = new Range(-5, 10);
+		assertTrue("Should return true", rangeObjectUnderTest.intersects(-6, 1));
 	}
 
 	@Test
-	public void testIntersectsLowerLeftOfRangeUpperRightBoundaryReturnsTrue() {
-		assertTrue("Should return true", rangeObjectUnderTest.intersects(1, 15));
+	public void testIntersectsBothUpperAndLowerIntersect() {
+		rangeObjectUnderTest = new Range(1, 15);
+		assertTrue("Should return true", rangeObjectUnderTest.intersects(5, 10));
 	}
 
 	@Test
-	public void testIntersectsLowerLeftOfRangeUpperRightOfRangeReturnsTrue() {
-		assertTrue("Should return true", rangeObjectUnderTest.intersects(1, 20));
-	}
-
-	@Test
-	public void testIntersectsBothLowerBoundaryReturnsTrue() {
-		assertTrue("Should return true", rangeObjectUnderTest.intersects(10, 10));
+	public void testIntersectsBothAboveIntersection() {
+		rangeObjectUnderTest = new Range(5, 10);
+		assertFalse("Should return false", rangeObjectUnderTest.intersects(15,20));
 	}
 	
 	@Test
-	public void testIntersectsBothLeftOfRangeReturnsFalse() {
-		assertFalse("Should return false", rangeObjectUnderTest.intersects(0, 4));
+	public void testIntersectsBothBelowIntersection() {
+		rangeObjectUnderTest = new Range(5, 10);
+		assertFalse("Should return false", rangeObjectUnderTest.intersects(-5,-1));
 	}
+
+
+	@Test
+	public void testIntersectsUpperEqual() {
+		rangeObjectUnderTest = new Range(5, 10);
+		assertFalse("Should return false", rangeObjectUnderTest.intersects(1, 10));
+	}
+	
+	@Test
+	public void testIntersectsLowerEqual() {
+		rangeObjectUnderTest = new Range(5, 15);
+		assertFalse("Should return false", rangeObjectUnderTest.intersects(5, 10));
+	}
+	
+	@Test
+	public void testIntersectsLowerHigherThanUpper() {
+		rangeObjectUnderTest = new Range(5, 10);
+		assertFalse("Should return false", rangeObjectUnderTest.intersects(10,5));
+	}
+
 
 }
