@@ -7,7 +7,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="C:/Users/rfran/Downloads/Lab2/Lab 2- artifacts/jcommon-1.0.5.jar"/>
-	<classpathentry kind="lib" path="C:/Users/rfran/Downloads/Lab2/Lab 2- artifacts/jfreechart.jar"/>
+	<classpathentry kind="lib" path="/Users/marcvillareal/Documents/Uni/Semester 2/CSC3056 - Software Testing/Software Testing/Labs/Lab2/Lab 2- artifacts/jcommon-1.0.5.jar"/>
+	<classpathentry kind="lib" path="/Users/marcvillareal/Documents/Uni/Semester 2/CSC3056 - Software Testing/Software Testing/Labs/Lab2/Lab 2- artifacts/jfreechart.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
