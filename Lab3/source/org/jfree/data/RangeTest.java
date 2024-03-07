@@ -21,7 +21,7 @@ public class RangeTest {
 	}
 
 	// -------------------------------Test methods forgetCentralValues()
-
+    // :)
 	@Test
 	public void testCentralValueShouldBeZero() {
 		//Tests if the central value of -1 and 1 is equal to 0
