@@ -65,7 +65,14 @@ public class DataUtilitiesTest {
 		dataArray = null;
 		dataValues = null;
 	}
-
+	
+	@Test
+	    public void testDataUtilitiesInstantiation() {
+	        // Test instantiating DataUtilities class
+	        DataUtilities dataUtilities = new DataUtilities() {}; // This line will cover the class declaration line
+	        assertNotNull(dataUtilities); // Ensure that an instance is created
+	}
+	
 	// --------------------- CalculateColumnTotal Tests ---------------------
 
 	@Test
@@ -561,5 +568,21 @@ public class DataUtilitiesTest {
 			assertTrue("IllegalArgumentException should be thrown for null data values.",
 					e.getClass().equals(IllegalArgumentException.class));
 		}
+	}
+	
+	@Test
+	public void testGetCumulativePercentages_WithNullValueInData() {
+	    // Test calculating cumulative percentages with null value in data.
+	    DefaultKeyedValues testData = new DefaultKeyedValues();
+	    testData.addValue("A", null);
+	    testData.addValue("B", 10);
+
+	    KeyedValues result = DataUtilities.getCumulativePercentages(testData);
+
+	    // Assert that the cumulative percentage is still calculated correctly
+	    assertEquals("Cumulative percentage for null value should be calculated correctly.",
+	            0.0, result.getValue(0)); // Assuming null is handled as 0 in calculation
+	    assertEquals("Cumulative percentage for non-null value should be calculated correctly.",
+	            1.0, result.getValue(1));
 	}
 }
