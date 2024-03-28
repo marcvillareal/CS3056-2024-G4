@@ -86,6 +86,7 @@ public class RangeTest {
 				0.000000001d);
 	}
 
+	
 	// ------------------------------- Test methods for constrain(double value)
 
 	@Test
@@ -136,7 +137,8 @@ public class RangeTest {
 		rangeObjectUnderTest = new Range(-5, 5);
 		assertEquals("The constrain value should be -5", -5, rangeObjectUnderTest.constrain(-5), 0.000000001d);
 	}
-
+	
+	
 	// ------------------- Test methods for getUpperBound()
 
 	@Test
@@ -285,6 +287,257 @@ public class RangeTest {
 		rangeObjectUnderTest = new Range(5, 10);
 		assertFalse("Should return false", rangeObjectUnderTest.intersects(10,5));
 	}
+	
+	// ---------------------------Test cases for combine(Range range1, Range range2)
+	
+	@Test
+    public void testCombineNullRange1() {
+        Range result = Range.combine(null, new Range(2, 4));
+        assertEquals("Combined range should be (2, 4)", new Range(2, 4), result);
+    }
 
+    @Test
+    public void testCombineNullRange2() {
+        Range result = Range.combine(new Range(-3, -1), null);
+        assertEquals("Combined range should be (-3, -1)", new Range(-3, -1), result);
+    }
 
+    @Test
+    public void testCombineNullRanges() {
+        Range result = Range.combine(null, null);
+        assertNull("Combined range should be null", result);
+    }
+
+    @Test
+    public void testCombineEncompassingRanges() {
+        Range range1 = new Range(-5, 5);
+        Range range2 = new Range(-2, 2);
+        Range result = Range.combine(range1, range2);
+        assertEquals("Combined range should be (-5, 5)", new Range(-5, 5), result);
+    }
+
+    @Test
+    public void testCombineOverlappingRanges() {
+        Range range1 = new Range(-5, 0);
+        Range range2 = new Range(-2, 3);
+        Range result = Range.combine(range1, range2);
+        assertEquals("Combined range should be (-5, 3)", new Range(-5, 3), result);
+    }
+
+    @Test
+    public void testCombineDisjointRanges() {
+        Range range1 = new Range(-5, -1);
+        Range range2 = new Range(1, 5);
+        Range result = Range.combine(range1, range2);
+        assertEquals("Combined range should be (-5, 5)", new Range(-5, 5), result);
+    }
+    
+    
+    // --------------------------------- Test cases for expand()
+
+    
+    @Test
+    public void testExpandPositiveMargins() {
+        Range result = Range.expand(rangeObjectUnderTest, 0.1, 0.2);
+        assertEquals("Expanded range should be (-1.2, 1.4)", new Range(-1.2, 1.4), result);
+    }
+
+    @Test
+    public void testExpandNegativeMargins() {
+        Range result = Range.expand(rangeObjectUnderTest, -0.2, -0.1);
+        assertEquals("Expanded range should be (-0.8, 1.2)", new Range(-0.8, 1.2), result);
+    }
+
+    @Test
+    public void testExpandDifferentMargins() {
+        Range result = Range.expand(rangeObjectUnderTest, 0.1, 0.3);
+        assertEquals("Expanded range should be (-1.3, 1.6)", new Range(-1.3, 1.6), result);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testExpandNullRange() {
+        Range result = Range.expand(null, 0.1, 0.2);
+        // Should throw IllegalArgumentException
+    }
+
+    
+    // --------------------------------- Test cases for hashCode()
+    
+    @Test
+    public void testHashCodeConsistency() {
+        Range range1 = new Range(0, 5);
+        Range range2 = new Range(0, 5);
+        assertEquals("Hash codes should be consistent for equal objects", 
+                     range1.hashCode(), range2.hashCode());
+    }
+
+    @Test
+    public void testHashCodeDifference() {
+        Range range1 = new Range(0, 5);
+        Range range2 = new Range(1, 6);
+        assertNotEquals("Hash codes should be different for different objects", 
+                        range1.hashCode(), range2.hashCode());
+    }
+
+    @Test
+    public void testHashCodeSelfConsistency() {
+        int hashCode = rangeObjectUnderTest.hashCode();
+        assertEquals("Hash code should be consistent for the same object", 
+                     hashCode, rangeObjectUnderTest.hashCode());
+    }
+    
+    
+    // -------------------------------- Test cases for shift(Range base, double delta)
+    
+    @Test
+    public void testShiftWithDeltaPositive() {
+        Range shiftedRange = Range.shift(new Range(0, 5), 3);
+        assertEquals("Lower bound should be shifted by 3", 
+                     3.0, shiftedRange.getLowerBound(), 0.000001);
+        assertEquals("Upper bound should be shifted by 3", 
+                     8.0, shiftedRange.getUpperBound(), 0.000001);
+    }
+
+    @Test
+    public void testShiftWithDeltaNegative() {
+        Range shiftedRange = Range.shift(new Range(0, 5), -2);
+        assertEquals("Lower bound should be shifted by -2", 
+                     -2.0, shiftedRange.getLowerBound(), 0.000001);
+        assertEquals("Upper bound should be shifted by -2", 
+                     3.0, shiftedRange.getUpperBound(), 0.000001);
+    }
+
+    @Test
+    public void testShiftWithZeroDelta() {
+        Range shiftedRange = Range.shift(new Range(0, 5), 0);
+        assertEquals("Lower bound should remain unchanged", 
+                     0.0, shiftedRange.getLowerBound(), 0.000001);
+        assertEquals("Upper bound should remain unchanged", 
+                     5.0, shiftedRange.getUpperBound(), 0.000001);
+    }
+
+    @Test
+    public void testShiftAllowZeroCrossingTrue() {
+        Range shiftedRange = Range.shift(new Range(-2, 2), -3, true);
+        assertEquals("Lower bound should be shifted by -3", 
+                     -5.0, shiftedRange.getLowerBound(), 0.000001);
+        assertEquals("Upper bound should be shifted by -3", 
+                     -1.0, shiftedRange.getUpperBound(), 0.000001);
+    }
+
+    @Test
+    public void testShiftAllowZeroCrossingFalse() {
+        Range shiftedRange = Range.shift(new Range(-2, 2), -3, false);
+        assertEquals("Lower bound should be shifted to 0", 
+                     0.0, shiftedRange.getLowerBound(), 0.000001);
+        assertEquals("Upper bound should be shifted to 4", 
+                     4.0, shiftedRange.getUpperBound(), 0.000001);
+    }
+    
+    
+    // ------------------------------------ Test cases for expandToInclude(Range range, double value)
+    
+    @Test
+    public void testExpandToIncludeNullRange() {
+        Range expandedRange = Range.expandToInclude(null, 5);
+        assertEquals("Lower bound should be set to 5", 
+                     5.0, expandedRange.getLowerBound(), 0.000001);
+        assertEquals("Upper bound should be set to 5", 
+                     5.0, expandedRange.getUpperBound(), 0.000001);
+    }
+
+    @Test
+    public void testExpandToIncludeValueSmallerThanLowerBound() {
+        Range expandedRange = Range.expandToInclude(new Range(0, 10), -2);
+        assertEquals("Lower bound should be updated to -2", 
+                     -2.0, expandedRange.getLowerBound(), 0.000001);
+        assertEquals("Upper bound should remain unchanged (10)", 
+                     10.0, expandedRange.getUpperBound(), 0.000001);
+    }
+
+    @Test
+    public void testExpandToIncludeValueGreaterThanUpperBound() {
+        Range expandedRange = Range.expandToInclude(new Range(0, 10), 15);
+        assertEquals("Lower bound should remain unchanged (0)", 
+                     0.0, expandedRange.getLowerBound(), 0.000001);
+        assertEquals("Upper bound should be updated to 15", 
+                     15.0, expandedRange.getUpperBound(), 0.000001);
+    }
+
+    @Test
+    public void testExpandToIncludeValueWithinRange() {
+        Range originalRange = new Range(-5, 5);
+        Range expandedRange = Range.expandToInclude(originalRange, 0);
+        assertEquals("Lower bound should remain unchanged (-5)", 
+                     -5.0, expandedRange.getLowerBound(), 0.000001);
+        assertEquals("Upper bound should remain unchanged (5)", 
+                     5.0, expandedRange.getUpperBound(), 0.000001);
+        assertTrue("Expanded range should be the same object as the original range", 
+                   expandedRange == originalRange);
+    }
+    
+    
+    // ---------------------------------- Test cases for Range(double lower, double upper)
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorWithLowerGreaterThanUpper() {
+        new Range(5, 1);
+    }
+
+    @Test
+    public void testConstructorWithLowerEqualToUpper() {
+        Range range = new Range(5, 5);
+        assertEquals("Lower bound should be 5", 5.0, range.getLowerBound(), 0.000001);
+        assertEquals("Upper bound should be 5", 5.0, range.getUpperBound(), 0.000001);
+    }
+
+    @Test
+    public void testConstructorWithValidRange() {
+        Range range = new Range(-5, 10);
+        assertEquals("Lower bound should be -5", -5.0, range.getLowerBound(), 0.000001);
+        assertEquals("Upper bound should be 10", 10.0, range.getUpperBound(), 0.000001);
+    }
+    
+    
+    // ----------------------------------- Test cases for equals(Object obj)
+    
+    @Test
+    public void testEqualsWithSameInstance() {
+        assertTrue("Should return true when comparing with itself", rangeObjectUnderTest.equals(rangeObjectUnderTest));
+    }
+
+    @Test
+    public void testEqualsWithEqualRanges() {
+        Range equalRange = new Range(0, 10);
+        assertTrue("Should return true for equal ranges", rangeObjectUnderTest.equals(equalRange));
+    }
+
+    @Test
+    public void testEqualsWithDifferentRanges() {
+        Range differentRange = new Range(5, 15);
+        assertFalse("Should return false for different ranges", rangeObjectUnderTest.equals(differentRange));
+    }
+
+    @Test
+    public void testEqualsWithDifferentObjectType() {
+        assertFalse("Should return false when comparing with a different type", rangeObjectUnderTest.equals("not a Range"));
+    }
+
+    @Test
+    public void testEqualsWithNull() {
+        assertFalse("Should return false when comparing with null", rangeObjectUnderTest.equals(null));
+    }
+
+    @Test
+    public void testEqualsWithEqualValuesDifferentObjects() {
+        Range equalValuesDifferentObjects = new Range(0, 10);
+        assertTrue("Should return true for equal values even if objects are different", rangeObjectUnderTest.equals(equalValuesDifferentObjects));
+    }
+
+    @Test
+    public void testEqualsWithDifferentPrecision() {
+        Range differentPrecision = new Range(0.0, 10.0);
+        assertTrue("Should return true when comparing equal values with different precision", rangeObjectUnderTest.equals(differentPrecision));
+    }
+    
 }
