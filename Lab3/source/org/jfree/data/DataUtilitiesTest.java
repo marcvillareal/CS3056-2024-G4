@@ -585,4 +585,73 @@ public class DataUtilitiesTest {
 	    assertEquals("Cumulative percentage for non-null value should be calculated correctly.",
 	            1.0, result.getValue(1));
 	}
+	
+	@Test
+	public void testGetCumulativePercentages_WithDifferentValues() {
+	    // Test calculating cumulative percentages with different values in data.
+	    DefaultKeyedValues testData = new DefaultKeyedValues();
+	    testData.addValue("A", 5);
+	    testData.addValue("B", 10);
+	    testData.addValue("C", 3);
+
+	    KeyedValues result = DataUtilities.getCumulativePercentages(testData);
+
+	    // Assert that cumulative percentages are calculated correctly
+	    assertEquals("Cumulative percentage for value A should be calculated correctly.",
+	            0.25, result.getValue(0)); // 5 / (5 + 10 + 3) = 0.25
+	    assertEquals("Cumulative percentage for value B should be calculated correctly.",
+	            0.75, result.getValue(1)); // (5 + 10) / (5 + 10 + 3) = 0.75
+	    assertEquals("Cumulative percentage for value C should be calculated correctly.",
+	            1.0, result.getValue(2)); // (5 + 10 + 3) / (5 + 10 + 3) = 1.0
+	}
+
+	@Test
+	public void testGetCumulativePercentages_WithZeroTotalValue() {
+	    // Test calculating cumulative percentages with zero total value.
+	    DefaultKeyedValues testData = new DefaultKeyedValues();
+	    testData.addValue("A", 0);
+	    testData.addValue("B", 0);
+	    testData.addValue("C", 0);
+
+	    KeyedValues result = DataUtilities.getCumulativePercentages(testData);
+
+	    // Assert that all cumulative percentages are zero for zero total value
+	    assertEquals("Cumulative percentage for value A should be zero for zero total value.",
+	            0.0, result.getValue(0));
+	    assertEquals("Cumulative percentage for value B should be zero for zero total value.",
+	            0.0, result.getValue(1));
+	    assertEquals("Cumulative percentage for value C should be zero for zero total value.",
+	            0.0, result.getValue(2));
+	}
+
+	@Test
+	public void testGetCumulativePercentages_WithLargeData() {
+	    // Test calculating cumulative percentages with a large data set.
+	    DefaultKeyedValues testData = new DefaultKeyedValues();
+	    for (int i = 0; i < 1000; i++) {
+	        testData.addValue(String.valueOf(i), i + 1);
+	    }
+
+	    KeyedValues result = DataUtilities.getCumulativePercentages(testData);
+
+	    // Assert that the last cumulative percentage is 1.0 for large data
+	    assertEquals("Last cumulative percentage should be 1.0 for large data.",
+	            1.0, result.getValue(999));
+	}
+
+	@Test
+	public void testGetCumulativePercentages_WithMixedDataTypes() {
+	    // Test calculating cumulative percentages with mixed data types (Integer and Double).
+	    DefaultKeyedValues testData = new DefaultKeyedValues();
+	    testData.addValue("A", 5);
+	    testData.addValue("B", 7.5); // Double value
+
+	    KeyedValues result = DataUtilities.getCumulativePercentages(testData);
+
+	    // Assert that cumulative percentages are calculated correctly for mixed data types
+	    assertEquals("Cumulative percentage for value A should be calculated correctly.",
+	            0.4, result.getValue(0)); // 5 / (5 + 7.5) = 0.4
+	    assertEquals("Cumulative percentage for value B should be calculated correctly.",
+	            1.0, result.getValue(1)); // (5 + 7.5) / (5 + 7.5) = 1.0
+	}
 }
